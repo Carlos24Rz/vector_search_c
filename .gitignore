@@ -1,3 +1,7 @@
+# Jupyter content directory for testing
+content/
+
+
 # Python bytecode
 __pycache__/
 *.py[cod]

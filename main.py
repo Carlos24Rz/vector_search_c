@@ -5,7 +5,8 @@ import tree_sitter_c
 from tree_sitter import Language, Parser
 from sentence_transformers.util import semantic_search
 import torch
-from torch.cuda import is_available as cuda_is_available
+import torch.cuda
+import torch.mps
 from unixcoder import UniXcoder
 
 C_LANGUAGE = Language(tree_sitter_c.language())
@@ -17,8 +18,10 @@ ts_query = C_LANGUAGE.query(
 (function_definition) @function
 """)
 
-if cuda_is_available():
+if torch.cuda.is_available():
     device = "cuda"
+elif torch.mps.is_available():
+    device = "mps"
 else:
     device = "cpu"
 
@@ -124,7 +127,7 @@ if __name__ == "__main__":
 
             for query_entry in query_results:
                 for entry in query_entry:
-                    print(f"(Score: {entry["score"]:.4f})\n", project_functions[entry["corpus_id"]])
+                    print(f"(Score: {entry['score']:.4f})\n", project_functions[entry["corpus_id"]])
                     print("============================================")
     except KeyboardInterrupt:
         print("\nbye")
